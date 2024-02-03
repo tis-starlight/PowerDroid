@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - README.md
+    branches:
+      - '*'
+  pull_request:
+    paths-ignore:
+      - README.md
+    branches:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and Test
+        run: ./gradlew test
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-test-results
+          path: app/build/reports/tests/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 6
+          overwrite: true
+
+      - name: Code Lint
+        run: ./gradlew lint
+
+      - name: Upload Lint Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-lint-results
+          path: app/build/reports/lint-results-debug.html
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 6
+          overwrite: true
+
+      - name: Build APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 6
+          overwrite: true
+
+      - name: Display Job Summary
+        run: |
+          echo "### :page_facing_up: **Job Summary**" >> $GITHUB_STEP_SUMMARY
+          echo "  - :shipit: **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "  - :calendar: **Event:**  ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "  - :hammer: **Build Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "  - :hash: **Commit Hash:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Sign Release APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Generate release tag
+        id: tag
+        run: |
+          echo "release_tag=PowerDroid_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
+
+      - name: Upload Signed Release Apk
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          asset_name: PowerDroid.apk
+          tag: ${{ steps.tag.outputs.release_tag }}
+        # overwrite: true
+        # body: "This is my release text"
+
+      #  - name: Upload Signed Release Apk
+      #    uses: softprops/action-gh-release@v1
+      #    env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #    with:
+      #       tag_name: ${{ steps.tag.outputs.release_tag }}
+      #       files: |
+      #        app/build/outputs/apk/release/app-release-unsigned-signed.apk
