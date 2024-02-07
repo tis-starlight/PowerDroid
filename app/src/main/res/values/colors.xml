@@ -2,4 +2,26 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="round_gradient_button_start_color">#DC2424</color>
+    <color name="round_gradient_button_end_color">#4A569D</color>
+    <color name="round_gradient_button1_start_color">#480048</color>
+    <color name="round_gradient_button1_end_color">#C04848</color>
+    <color name="round_gradient_button2_start_color">#ac3433</color>
+    <color name="round_gradient_button2_end_color">#5e121f</color>
+    <color name="round_gradient_button3_start_color">#5e121f</color>
+    <color name="round_gradient_button3_end_color">#747474</color>
+    <color name="round_gradient_button4_start_color">#b71c1c</color>
+    <color name="round_gradient_button4_end_color">#4e342e</color>
+    <color name="round_gradient_button5_start_color">#080d0f</color>
+    <color name="round_gradient_button5_center_color">#916537</color>
+    <color name="round_gradient_button5_end_color">#564126</color>
+    <color name="round_gradient_button6_start_color">#b1e5af</color>
+    <color name="round_gradient_button6_center_color">#29482a</color>
+    <color name="round_gradient_button6_end_color">#559450</color>
+    <color name="round_gradient_button7_start_color">#01579b</color>
+    <color name="round_gradient_button7_center_color">#ba68c8</color>
+    <color name="round_gradient_button7_end_color">#64b5f6</color>
+    <color name="round_gradient_button8_start_color">#255674</color>
+    <color name="round_gradient_button8_center_color">#93728d</color>
+    <color name="round_gradient_button8_end_color">#090f23</color>
 </resources>

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">PowerDroid</string>
+    <string name="FavLang">Language</string>
+
+    <string-array name="degree_array">
+        <item>Bachelors</item>
+        <item>Masters</item>
+        <item>Ph.D</item>
+    </string-array>
+
+    <string-array name="field_array">
+        <item>Computer Science</item>
+        <item>Software Engineering</item>
+        <item>Information Technology</item>
+        <item>Artificial Intelligence</item>
+    </string-array>
 </resources>

@@ -8,16 +8,19 @@
 
 - Color Picker
 - Advanced Calculator
-- Unit Coverters
+- Unit Converters
 - Encode/convert & Decode Text:
   * ASCII, Binary, hex, octal and vice-versa.
 - Encrypt & Decrypt messages (cipher)
 - Morse Code
-- Data Exporter
+- Data Exporter [**WIP**]
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/tis-starlight/PowerDroid.git`
+1. Clone the repository:
+   ```git
+   git clone https://github.com/tis-starlight/PowerDroid.git
+   ```
 2. Open in Android Studio.
 3. Build and run on your Android device or emulator.
 

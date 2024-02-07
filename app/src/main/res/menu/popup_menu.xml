@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:style="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/cLang"
+        android:title="C"/>
+    <item
+        android:id="@+id/cppLang"
+        android:title="C++"/>
+    <item
+        android:id="@+id/csharpLang"
+        android:title="C#"/>
+    <item
+        android:id="@+id/asmLang"
+        android:title="Assembly"/>
+    <item
+        android:id="@+id/jsLang"
+        android:title="JavaScript"/>
+    <item
+        android:id="@+id/pythonLang"
+        android:title="Python"/>
+</menu>
